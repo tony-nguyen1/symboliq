@@ -17,7 +17,7 @@ public class ZebreExtension {
 		IntVar ivo = model.intVar("Ivory", 1, 5);         
 		IntVar red = model.intVar("Red", 1, 5);         
 		IntVar yel = model.intVar("Yellow", 1, 5);   
-		
+
 		IntVar eng = model.intVar("English", 1, 5);         
 		IntVar jap = model.intVar("Japanese", 1, 5);         
 		IntVar nor = model.intVar("Norwegian", 1, 5);         
@@ -111,8 +111,37 @@ public class ZebreExtension {
          * Compléter en ajoutant les contraintes modélisant les phrases 2 à 15  *
          *                                                                      *
          ************************************************************************/
-        
-        
+
+        //C2
+        model.table(new IntVar[]{eng,red}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C3
+        model.table(new IntVar[]{spa,dog}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C4
+        model.table(new IntVar[]{cof,gre}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C5
+        model.table(new IntVar[]{ukr,tea}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C6
+        model.table(new IntVar[]{gre,ivo}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
+        //C7
+        model.table(new IntVar[]{old,sna}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
+        //C8
+        model.table(new IntVar[]{koo,yel}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
+        //C9
+        model.table(new IntVar[]{mil}, new Tuples(new int[][]{{3}},true)).post();
+        //C10
+        model.table(new IntVar[]{nor}, new Tuples(new int[][]{{1}},true)).post();
+        //C11
+        model.table(new IntVar[]{che,fox}, new Tuples(new int[][]{{1,2},{2,3},{2,1},{3,2},{3,4},{4,3},{4,5}},true)).post();
+        //C12
+        model.table(new IntVar[]{koo,hor}, new Tuples(new int[][]{{1,2},{2,1},{2,3},{3,2},{3,4},{4,3},{4,5}},true)).post();
+        //C13
+        model.table(new IntVar[]{luc,ora}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C14
+        model.table(new IntVar[]{jap,par}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        //C15
+        model.table(new IntVar[]{nor,blu}, new Tuples(new int[][]{{1,2},{2,1},{2,3},{3,2},{3,4},{4,3},{4,5}},true)).post();
+
+
         // Affichage du réseau de contraintes créé
         System.out.println("*** Réseau Initial ***");
         System.out.println(model);
@@ -125,14 +154,12 @@ public class ZebreExtension {
         }
 
         
-/*        
     	// Calcul de toutes les solutions
-    	System.out.println("\n\n*** Autres solutions ***");        
-        while(model.getSolver().solve()) {    	
+    	System.out.println("\n\n*** Autres solutions ***");
+        while(model.getSolver().solve()) {
             System.out.println("Sol "+ model.getSolver().getSolutionCount()+"\n"+model);
 	    }
-*/	    
- 
+
         
         // Affichage de l'ensemble des caractéristiques de résolution
       	System.out.println("\n\n*** Bilan ***");        
