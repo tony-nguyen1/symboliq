@@ -1,53 +1,52 @@
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.constraints.extension.Tuples;
+import org.chocosolver.solver.variables.IntVar;
+
+public class ZebreIntention {
+
+    public static void main(String[] args) {
+
+        // Création du modele
+        Model model = new Model("Zebre");
 
 
-public class ZebreExtension {
+        // Création des variables
+        IntVar blu = model.intVar("Blue", 1, 5);	// blu est une variable entière dont le nom est "Blue" est le domaine [1,5]
+        IntVar gre = model.intVar("Green", 1, 5);
+        IntVar ivo = model.intVar("Ivory", 1, 5);
+        IntVar red = model.intVar("Red", 1, 5);
+        IntVar yel = model.intVar("Yellow", 1, 5);
 
-	public static void main(String[] args) {
-		
-		// Création du modele
-		Model model = new Model("Zebre");
-		
-		
-		// Création des variables
-		IntVar blu = model.intVar("Blue", 1, 5);	// blu est une variable entière dont le nom est "Blue" est le domaine [1,5]
-		IntVar gre = model.intVar("Green", 1, 5); 
-		IntVar ivo = model.intVar("Ivory", 1, 5);         
-		IntVar red = model.intVar("Red", 1, 5);         
-		IntVar yel = model.intVar("Yellow", 1, 5);   
+        IntVar eng = model.intVar("English", 1, 5);
+        IntVar jap = model.intVar("Japanese", 1, 5);
+        IntVar nor = model.intVar("Norwegian", 1, 5);
+        IntVar spa = model.intVar("Spanish", 1, 5);
+        IntVar ukr = model.intVar("Ukrainian", 1, 5);
 
-		IntVar eng = model.intVar("English", 1, 5);         
-		IntVar jap = model.intVar("Japanese", 1, 5);         
-		IntVar nor = model.intVar("Norwegian", 1, 5);         
-		IntVar spa = model.intVar("Spanish", 1, 5);         
-		IntVar ukr = model.intVar("Ukrainian", 1, 5);         
-		
-		IntVar cof = model.intVar("Coffee", 1, 5);         
-		IntVar mil = model.intVar("Milk", 1, 5);         
-		IntVar ora = model.intVar("Orange Juice", 1, 5);         
-		IntVar tea = model.intVar("Tea", 1, 5);         
-		IntVar wat = model.intVar("Water", 1, 5);         
-		
-	    IntVar dog = model.intVar("Dog", 1, 5);         
-	    IntVar fox = model.intVar("Fox", 1, 5);         
-	    IntVar hor = model.intVar("Horse", 1, 5);         
-	    IntVar sna = model.intVar("Snail", 1, 5);         
-	    IntVar zeb = model.intVar("Zebra", 1, 5);         
-	    
-	    IntVar che = model.intVar("Chesterfield", 1, 5);         
-	    IntVar koo = model.intVar("Kool", 1, 5);         
-	    IntVar luc = model.intVar("Lucky Strike", 1, 5);         
-	    IntVar old = model.intVar("Old Gold", 1, 5);         
-	    IntVar par = model.intVar("Parliament", 1, 5);         
+        IntVar cof = model.intVar("Coffee", 1, 5);
+        IntVar mil = model.intVar("Milk", 1, 5);
+        IntVar ora = model.intVar("Orange Juice", 1, 5);
+        IntVar tea = model.intVar("Tea", 1, 5);
+        IntVar wat = model.intVar("Water", 1, 5);
 
-	    
-	    // Création des contraintes
+        IntVar dog = model.intVar("Dog", 1, 5);
+        IntVar fox = model.intVar("Fox", 1, 5);
+        IntVar hor = model.intVar("Horse", 1, 5);
+        IntVar sna = model.intVar("Snail", 1, 5);
+        IntVar zeb = model.intVar("Zebra", 1, 5);
+
+        IntVar che = model.intVar("Chesterfield", 1, 5);
+        IntVar koo = model.intVar("Kool", 1, 5);
+        IntVar luc = model.intVar("Lucky Strike", 1, 5);
+        IntVar old = model.intVar("Old Gold", 1, 5);
+        IntVar par = model.intVar("Parliament", 1, 5);
+
+
+        // Création des contraintes
         int [][] tEq = new int[][] {{1,1},{2,2},{3,3},{4,4},{5,5}};
         Tuples tuplesAutorises = new Tuples(tEq,true);		// création de Tuples de valeurs autorisés
         Tuples tuplesInterdits = new Tuples(tEq,false);		// création de Tuples de valeurs interdits
-        
+
         model.table(new IntVar[]{blu,gre}, tuplesInterdits).post();
         // création d'une contrainte en extension de portée <blu,gre>
         // dont les tuples autorisés/interdits sont données par tuplesInterdits
@@ -105,7 +104,7 @@ public class ZebreExtension {
         model.table(new IntVar[]{luc,par}, tuplesInterdits).post();
         model.table(new IntVar[]{old,par}, tuplesInterdits).post();
 
-        
+
         /************************************************************************
          *                                                                      *
          * Compléter en ajoutant les contraintes modélisant les phrases 2 à 15  *
@@ -145,24 +144,24 @@ public class ZebreExtension {
         // Affichage du réseau de contraintes créé
         System.out.println("*** Réseau Initial ***");
         System.out.println(model);
-        
+
 
         // Calcul de la première solution
         if(model.getSolver().solve()) {
-        	System.out.println("\n\n*** Première solution ***");        
-        	System.out.println(model);
+            System.out.println("\n\n*** Première solution ***");
+            System.out.println(model);
         }
 
-        
-    	// Calcul de toutes les solutions
-    	System.out.println("\n\n*** Autres solutions ***");
+
+        // Calcul de toutes les solutions
+        System.out.println("\n\n*** Autres solutions ***");
         while(model.getSolver().solve()) {
             System.out.println("Sol "+ model.getSolver().getSolutionCount()+"\n"+model);
-	    }
+        }
 
-        
+
         // Affichage de l'ensemble des caractéristiques de résolution
-      	System.out.println("\n\n*** Bilan ***");        
+        System.out.println("\n\n*** Bilan ***");
         model.getSolver().printStatistics();
-	}
+    }
 }
