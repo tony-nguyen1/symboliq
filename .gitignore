@@ -1,0 +1,8 @@
+**/idea
+.nfs*
+**/.settings
+**/.classpath
+**/.project
+**/*.iml
+**/target
+**/.idea
