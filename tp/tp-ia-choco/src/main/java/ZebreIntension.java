@@ -113,40 +113,36 @@ public class ZebreIntension {
          ************************************************************************/
 
         //C2
-//        model.table(new IntVar[]{eng,red}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
         model.arithm(eng,"=",red).post();
         //C3
-//        model.table(new IntVar[]{spa,dog}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
         model.arithm(spa,"=",dog).post();
         //C4
-//        model.table(new IntVar[]{cof,gre}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
         model.arithm(cof,"=",gre).post();
         //C5
-//        model.table(new IntVar[]{ukr,tea}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
         model.arithm(ukr,"=",tea).post();
         //C6
-//        model.table(new IntVar[]{gre,ivo}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
-//        model.arithm(gre,"",ivo);
-        model.distance(gre,ivo,"=",1).post();
-        model.arithm(gre,">=",ivo,"+",1).post();
+        model.arithm(gre,"=",ivo,"+",1).post();
         //C7
-        model.table(new IntVar[]{old,sna}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
+        model.arithm(old,"=",sna,"+",1).post();
         //C8
-        model.table(new IntVar[]{koo,yel}, new Tuples(new int[][]{{5,4},{4,3},{3,2},{2,1}},true)).post();
+        model.arithm(koo,"=",yel,"+",1).post();
         //C9
-        model.table(new IntVar[]{mil}, new Tuples(new int[][]{{3}},true)).post();
+        model.absolute(mil, model.intVar(3)).post();
         //C10
-        model.table(new IntVar[]{nor}, new Tuples(new int[][]{{1}},true)).post();
+        model.absolute(nor, model.intVar(1)).post();
         //C11
         model.table(new IntVar[]{che,fox}, new Tuples(new int[][]{{1,2},{2,3},{2,1},{3,2},{3,4},{4,3},{4,5}},true)).post();
+//        model.distance(che,fox,"=",1).post(); // y a qql chose qui ne va pas avec celle là
+//        model.or(model.arithm(che,"=",fox,"+",1),model.arithm(fox,"=",che,"+",1)).post();
         //C12
-        model.table(new IntVar[]{koo,hor}, new Tuples(new int[][]{{1,2},{2,1},{2,3},{3,2},{3,4},{4,3},{4,5}},true)).post();
+//        model.distance(koo,hor,"=",1).post();
+        model.or(model.arithm(koo,"=",hor,"+",1),model.arithm(hor,"=",koo,"+",1)).post();
         //C13
-        model.table(new IntVar[]{luc,ora}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        model.arithm(luc,"=",ora).post();
         //C14
-        model.table(new IntVar[]{jap,par}, new Tuples(new int[][]{{1,1},{2,2},{3,3},{4,4},{5,5}},true)).post();
+        model.arithm(jap,"=",par).post();
         //C15
-        model.table(new IntVar[]{nor,blu}, new Tuples(new int[][]{{1,2},{2,1},{2,3},{3,2},{3,4},{4,3},{4,5}},true)).post();
+        model.or(model.arithm(nor,"=",blu,"+",1),model.arithm(blu,"=",nor,"+",1)).post();
 
 
         // Affichage du réseau de contraintes créé
