@@ -1,3 +1,5 @@
+package zebre;
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.constraints.extension.Tuples;
