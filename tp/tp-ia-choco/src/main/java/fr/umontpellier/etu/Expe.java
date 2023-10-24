@@ -33,7 +33,7 @@ public class Expe {
 
 
     public static void main(String[] args) throws Exception{
-        String ficName = "bench.txt";
+        String ficName = "benchInsat.txt";
         int nbRes=3;
         BufferedReader readFile = new BufferedReader(new FileReader(ficName));
         for(int nb=1 ; nb<=nbRes; nb++) {
@@ -42,7 +42,7 @@ public class Expe {
                 System.out.println("Problème de lecture de fichier !\n");
                 return;
             }
-            System.out.println("Réseau lu "+nb+" :\n"+model+"\n\n");
+            System.out.println("Réseau lu "+nb+" ("+model.getSolver().getSolutionCount()+" nb solutions) :\n"+/*model+*/"\n\n");
         }
         return;
     }
