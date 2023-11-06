@@ -46,6 +46,58 @@ public class nReine {
 //        model.and(model.arithm(t[0],));
 
         // Toutes les reines ne sout pas sur la même diagonale
+//        for (int a = 0; a < n; a++) {
+//            for (int b = 0; b < n; b++) {
+//                if (a!=b) {
+//                    model.distance(t[a],t[b],"!=",);
+//                }
+//            }
+//        }
+        model.distance(t[0],t[1],"!=",1);
+        model.distance(t[0],t[2],"!=",2);
+        model.distance(t[0],t[3],"!=",3);
+        model.distance(t[0],t[4],"!=",4);
+//        for (int a=0; a<n; a++) {
+            for (int b=0; b<n-1; b++) {
+                System.out.println("0 " + (b+1) + " " + (b+1));
+            }
+//        }
+
+        model.distance(t[1],t[0],"!=",1);
+        model.distance(t[1],t[2],"!=",1);
+        model.distance(t[1],t[3],"!=",2);
+        model.distance(t[1],t[4],"!=",3);
+        boolean monBool = false;
+        for (int b=0; b<n;b++) {
+            if (b == 1) { monBool = true; }
+
+            if (b!=2) {
+                if (monBool) {
+                    System.out.println("1 " + b + " " + (b - 1));
+                } else {
+                    System.out.println("1 " + b + " " + (1-b) + " " + monBool);
+                }
+            }
+        }
+
+        model.distance(t[2],t[0],"!=",2);
+        model.distance(t[2],t[1],"!=",1);
+        model.distance(t[2],t[3],"!=",1);
+        model.distance(t[2],t[4],"!=",2);
+        monBool = false;
+        System.out.println("t[2]");
+        for (int b=0; b<n;b++) {
+            if (b == 2) { monBool = true; }
+
+            if (b!=2) {
+                if (monBool) {
+                    System.out.println("2 " + b + " " + (b-2));
+                } else {
+                    System.out.println("2 " + b + " " + (2-b) + " " + monBool);
+                }
+            }
+        }
+
         for (IntVar aIntVar :
                 t) {
             for (IntVar bIntVar :
@@ -61,12 +113,12 @@ public class nReine {
         System.out.println("*** Réseau Initial ***");
         System.out.println(model);
 
-        if(model.getSolver().solve()) {
-            System.out.println("\n\n*** Première solution ***");
-            System.out.println(model);
-        }
+//        if(model.getSolver().solve()) {
+//            System.out.println("\n\n*** Première solution ***");
+//            System.out.println(model);
+//        }
 
-        System.out.println("\n\n*** Bilan ***");
-        model.getSolver().printStatistics();
+//        System.out.println("\n\n*** Bilan ***");
+//        model.getSolver().printStatistics();
     }
 }
