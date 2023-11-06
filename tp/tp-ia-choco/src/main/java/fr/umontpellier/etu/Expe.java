@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
+import org.chocosolver.solver.search.SearchState;
 import org.chocosolver.solver.variables.IntVar;
 
 public class Expe {
@@ -33,7 +35,7 @@ public class Expe {
 
 
     public static void main(String[] args) throws Exception{
-        String ficName = "benchInsat.txt";
+        String ficName = "benchSatisf.txt";
         int nbRes=3;
         BufferedReader readFile = new BufferedReader(new FileReader(ficName));
         for(int nb=1 ; nb<=nbRes; nb++) {
@@ -42,9 +44,36 @@ public class Expe {
                 System.out.println("Problème de lecture de fichier !\n");
                 return;
             }
+            while(model.getSolver().solve()) {}
+
             System.out.println("Réseau lu "+nb+" ("+model.getSolver().getSolutionCount()+" nb solutions) :\n"+/*model+*/"\n\n");
         }
         return;
+    }
+
+    //au moins 1 solution
+    public boolean modelHasASolution(Solver solver) throws Exception {
+
+        boolean foundASolution = false;
+
+        if(solver.solve()){ // true if at least one solution has been found
+            // do something, e.g. print out variable values
+            foundASolution = true;
+        } else
+//        solver.getSearchState();
+//        SearchState.
+
+        if(solver.getSearchState()==SearchState.STOPPED){
+            System.out.println("The solver could not find a solution nor prove that none exists in the given limits");
+        }else if(solver.getSearchState()==SearchState.TERMINATED){
+            System.out.println("The solver has proved the problem has no solution");
+        } else {
+            throw new Exception("");
+        }
+
+
+
+        return foundASolution;
     }
 
 }
