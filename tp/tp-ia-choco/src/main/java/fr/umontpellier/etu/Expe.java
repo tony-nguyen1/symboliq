@@ -3,6 +3,8 @@ package fr.umontpellier.etu;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import jdk.jshell.spi.ExecutionControl;
+import org.apache.maven.surefire.shared.lang3.NotImplementedException;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
@@ -53,27 +55,19 @@ public class Expe {
 
     //au moins 1 solution
     public boolean modelHasASolution(Solver solver) throws Exception {
-
         boolean foundASolution = false;
 
         if(solver.solve()){ // true if at least one solution has been found
-            // do something, e.g. print out variable values
             foundASolution = true;
-        } else
-//        solver.getSearchState();
-//        SearchState.
-
-        if(solver.getSearchState()==SearchState.STOPPED){
+        } else if (solver.isStopCriterionMet()) {
             System.out.println("The solver could not find a solution nor prove that none exists in the given limits");
-        }else if(solver.getSearchState()==SearchState.TERMINATED){
-            System.out.println("The solver has proved the problem has no solution");
         } else {
-            throw new Exception("");
+            System.out.println("The solver has proved the problem has no solution");
         }
-
-
 
         return foundASolution;
     }
+
+    public double calcPourcentageBench(int paramA, int paramB, int paramC, int paramD, Model[] models){ throw new NotImplementedException(); }
 
 }
