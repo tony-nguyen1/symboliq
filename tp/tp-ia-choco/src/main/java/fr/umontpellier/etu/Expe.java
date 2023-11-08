@@ -39,10 +39,13 @@ public class Expe {
 
     public static void main(String[] args){
         int nbRes=30;
-        int tailleTabNbTuples = ((211-178)/3)+1;
+        int finInterval = 204;
+        int debutInterval = 202;
+        int pas = 2;
+        int tailleTabNbTuples = ((finInterval-debutInterval)/2)+1;
         int[] tabNbTuples = new int[tailleTabNbTuples];
         int j=0;
-        for (int i=211; i>=178;i=i-3) {
+        for (int i=finInterval; i>=debutInterval;i=i-pas) {
             tabNbTuples[j]=i;
             j++;
         }
@@ -53,7 +56,7 @@ public class Expe {
             filesName.add(s);
         }
 
-        System.out.println("indice;nbVariables;nbConstraints;nbTuples;nbRes;durete;%ayantaumoins1sol");
+        System.out.println("indice;nbVariables;tailleDom;nbConstraints;nbTuples;durete;nbReussite;nbTO;nbEchec;total");
         int i = 0;
         for (String unNomDeFichier :
                 filesName) {
@@ -67,10 +70,10 @@ public class Expe {
 
             double tailleDomaineCarre = tailleDomaine * tailleDomaine;
             double durete = (tailleDomaineCarre - tabNbTuples[i])/tailleDomaineCarre;
-            double res = calcPourcentageBench(tabModel, "30s");
+            int[] res = calcPourcentageBench(tabModel, "30s");
 
 
-            String s = String.format(Locale.US,"%d;%d;%d;%d;%d;%f;%.4f",i,nbVariables,tailleDomaine,nbConstraints,tabNbTuples[i],durete,res);
+            String s = String.format(Locale.US,"%d;%d;%d;%d;%d;%f;%d;%d;%d;%d",i,nbVariables,tailleDomaine,nbConstraints,tabNbTuples[i],durete,res[0],res[1],res[2],res[3]);
             System.out.println(s);
             i++;
         }
@@ -106,31 +109,49 @@ public class Expe {
     }
 
     //au moins 1 solution
-    public static boolean modelHasASolution(Model unModel){
-        boolean foundASolution = false;
+    public static int modelHasASolution(Model unModel){
+//        boolean foundASolution = false;
+        int code = -1;
         Solver solver = unModel.getSolver();
 
         if(solver.solve()){ // true if at least one solution has been found
-            foundASolution = true;
+//            foundASolution = true;
+            code = 0;
         } else if (solver.isStopCriterionMet()) {
 //            System.out.println("The solver could not find a solution nor prove that none exists in the given limits");
+            code = 1;
         } else {
 //            System.out.println("The solver has proved the problem has no solution");
+            code = 2;
         }
 
-        return foundASolution;
+        return code;
     }
 
-    public static double calcPourcentageBench(Model[] models, String duration){
-        double nbReseauTotal = models.length;
-        double nbReseauQuiPossedeAuMoinsUneSolution = 0;
+    public static int[] calcPourcentageBench(Model[] models, String duration){
+        int nbReseauTotal = models.length;
+        int nbReseauQuiPossedeAuMoinsUneSolution = 0;
+        int[] result = {0,0,0,models.length}; //nbReussite, nbTimeOut, nbEchec, total
 
         for (Model m :
                 models) {
             m.getSolver().limitTime(duration);
-            if (modelHasASolution(m)) {
-                nbReseauQuiPossedeAuMoinsUneSolution++;
+            int code = modelHasASolution(m);
+            switch (code) {
+                case 0:
+                    result[0]++;
+                    break;
+                case 1:
+                    result[1]++;
+                    break;
+                case 2:
+                    result[2]++;
+                    break;
+
             }
+//            if (modelHasASolution(m)) {
+//                nbReseauQuiPossedeAuMoinsUneSolution++;
+//            }
         }
 
 //        System.out.println(nbReseauQuiPossedeAuMoinsUneSolution +"/"+nbReseauTotal);
@@ -145,7 +166,7 @@ public class Expe {
 //        d = nbReseauTotal;
 //        System.out.println(c/d);
 
-        return nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
+        return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
     }
 
 }
