@@ -1,4 +1,4 @@
-for i in 4 6 8 10 12 14 16 18 20 22 24 26 30 32 34 36 38 40 45 50 60 70 80
+for (( i=211; i>=178; i-=3 ))
 do
-./urbcsp 10 15 10 $i 3000 > csp$i.txt
+./urbcsp 35 17 249 $i 30 > benchmark/set35_17_249_i_30/csp$i.txt
 done

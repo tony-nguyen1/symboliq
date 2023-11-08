@@ -38,12 +38,18 @@ public class Expe {
 
 
     public static void main(String[] args){
-        int nbRes=3000;
-        int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
+        int nbRes=30;
+        int tailleTabNbTuples = ((211-178)/3)+1;
+        int[] tabNbTuples = new int[tailleTabNbTuples];
+        int j=0;
+        for (int i=211; i>=178;i=i-3) {
+            tabNbTuples[j]=i;
+            j++;
+        }
         ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
         for (int i :
                 tabNbTuples) {
-            String s = String.format("csp%d.txt",i);
+            String s = String.format("benchmark/set35_17_249_i_30/csp%d.txt",i);
             filesName.add(s);
         }
 
@@ -59,7 +65,8 @@ public class Expe {
             nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
 
 
-            double durete = (tailleDomaine*tailleDomaine - tabNbTuples[i])/tailleDomaine*tailleDomaine;
+            double tailleDomaineCarre = tailleDomaine * tailleDomaine;
+            double durete = (tailleDomaineCarre - tabNbTuples[i])/tailleDomaineCarre;
             double res = calcPourcentageBench(tabModel, "30s");
 
 
