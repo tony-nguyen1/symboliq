@@ -40,7 +40,22 @@ public class Expe {
     }
 
 
+    public static void mainTony(String[] args){
+        traiterDonnees(models -> Stream.of(calcEffectifsBench(models,"30s"))
+                .map(String::valueOf).toArray(String[]::new));/* on converti le tableau de int
+                           renvoyé par calcEffectifsBench en tableau de String */
+    }
     public static void main(String[] args){
+        traiterDonnees(models ->  {
+            Model model = models[0];
+            Solver s = model.getSolver();
+            s.limitTime(30000);
+            TimeInfo timeInfo = temps(() -> ! s.solve(), 30000000,5);
+            return timeInfo.toStrings();
+
+        });
+    }
+    public static void traiterDonnees(Function<Model[],String[]> measure){
         int nbRes=3000;
         int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
         ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
@@ -56,15 +71,12 @@ public class Expe {
                 filesName) {
             Model[] tabModel = readModels(unNomDeFichier, nbRes);
 
-            String s = ligneCsv(i,tabModel,tabNbTuples[i],
-                    models -> Stream.of(calcEffectifsBench(models,"30s"))
-                            .map(String::valueOf).toArray(String[]::new));/*on converti le tableau de int
-                           renvoyé par calcEffectifsBench en tableau de String */
+            String s = ligneCsv(i,tabModel,tabNbTuples[i],measure);
             System.out.println(s);
             i++;
         }
-    }
 
+    }
 
     public static String ligneCsv (int index, Model[] tabModel, int nbTuples,Function<Model[],String[]> measure){
         int nbVariables = tabModel[0].getVars().length;
@@ -171,16 +183,51 @@ public class Expe {
         return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
     }
 
-    public static TimeInfo temps(Supplier<Boolean> isTimedOut, String limit){
-        ThreadMXBean thread = ManagementFactory.getThreadMXBean();
-        long startTime = System.nanoTime();
-        long startCpuTime = thread.getCurrentThreadCpuTime();
-        long startUserTime = thread.getCurrentThreadUserTime();
-        boolean timedOut = isTimedOut.get();
-        long userTime = thread.getCurrentThreadUserTime() - startUserTime;
-        long cpuTime = thread.getCurrentThreadCpuTime() - startCpuTime;
-        long realTime = System.nanoTime() - startTime;
-        return new TimeInfo(userTime,cpuTime,realTime, timedOut);
+    public static TimeInfo temps(Supplier<Boolean> isTimedOut, long maxTime, int nbTests){
+        final long [] userTime = new long[nbTests];
+        final long [] cpuTime = new long[nbTests];
+        final long [] realTime = new long[nbTests];
+        boolean timedOutOnce = false;
+        double realTimeMax = 0;
+        double realTimeMin = maxTime;
+        int iMax = 0;
+        int iMin = 0;
+        for (int i = 0; i < nbTests; i++) {
+            ThreadMXBean thread = ManagementFactory.getThreadMXBean();
+            long startTime = System.nanoTime();
+            long startCpuTime = thread.getCurrentThreadCpuTime();
+            long startUserTime = thread.getCurrentThreadUserTime();
+            boolean timedOut = isTimedOut.get() ;
+            userTime [i] = thread.getCurrentThreadUserTime() - startUserTime;
+            cpuTime[i] = thread.getCurrentThreadCpuTime() - startCpuTime;
+            realTime[i] = System.nanoTime() - startTime;
+            if (realTime[i] > realTimeMax){
+                iMax = i;
+                realTimeMax = realTime[i];
+            }
+            if (realTime[i] < realTimeMin){
+                iMin = i;
+                realTimeMin = realTime[i];
+            }
+
+            //convention : si on est timed out pour la seconde fois on prends comme temps moyens les derniers temps
+            if (timedOut && timedOutOnce) return new TimeInfo(userTime[i], cpuTime[i], realTime[i], 2);
+
+            timedOutOnce = timedOut;
+        }
+        double userSum = 0;
+        double cpuSum = 0;
+        double realSum = 0;
+        for (int i = 0 ; i < nbTests; i++){
+            if (i == iMax || i == iMin) continue;
+            userSum += userTime[i];
+            cpuSum += cpuTime[i];
+            realSum += realTime[i];
+
+
+        }
+        int n = nbTests - 2;
+        return new TimeInfo(userSum/n, cpuSum/n, realSum/n, timedOutOnce ? 1 : 0);
 
     }
 
