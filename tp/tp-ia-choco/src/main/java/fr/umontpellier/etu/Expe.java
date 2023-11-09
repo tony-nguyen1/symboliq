@@ -2,8 +2,11 @@ package fr.umontpellier.etu;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
@@ -139,6 +142,19 @@ public class Expe {
 //        System.out.println(c/d);
 
         return nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
+    }
+    public static TimeInfo temps(Supplier<Boolean> success, String limit){
+        ThreadMXBean thread = ManagementFactory.getThreadMXBean();
+// ...
+        long startTime = System.nanoTime();
+        long startCpuTime = thread.getCurrentThreadCpuTime();
+        long startUserTime = thread.getCurrentThreadUserTime();
+        if (! success.get()) return null;
+        long userTime = thread.getCurrentThreadUserTime() - startUserTime;
+        long cpuTime = thread.getCurrentThreadCpuTime() - startCpuTime;
+        long realTime = System.nanoTime() - startTime;
+        return new TimeInfo(userTime,cpuTime,realTime);
+
     }
 
 }
