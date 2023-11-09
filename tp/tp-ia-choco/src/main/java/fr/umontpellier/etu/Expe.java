@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apache.maven.surefire.shared.lang3.function.TriFunction;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
@@ -40,23 +41,34 @@ public class Expe {
     }
 
 
+    public static final int NBRESEAU =3000;
     public static void mainTony(String[] args){
-        traiterDonnees(models -> Stream.of(calcEffectifsBench(models,"30s"))
-                .map(String::valueOf).toArray(String[]::new));/* on converti le tableau de int
-                           renvoyé par calcEffectifsBench en tableau de String */
-    }
-    public static void main(String[] args){
-        traiterDonnees(models ->  {
-            Model model = models[0];
-            Solver s = model.getSolver();
-            s.limitTime(30000);
-            TimeInfo timeInfo = temps(() -> ! s.solve(), 30000000,5);
-            return timeInfo.toStrings();
+        traiterDonnees((tabModel,nbTuples,index) -> {
+            int nbVariables = tabModel[0].getVars().length;
+            int tailleDomaine = tabModel[0].getVars()[0].asIntVar().getDomainSize(); // toutes les variables ont un domaine de même taille
+            int nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
+            double durete = (tailleDomaine*tailleDomaine - nbTuples)/tailleDomaine*tailleDomaine;
 
+            String[] res = Stream.of(calcEffectifsBench(tabModel,"30s"))
+                    .map(String::valueOf).toArray(String[]::new);
+
+
+            return Stream.of(String.format(Locale.US,"%d;%d;%d;%d;%d;%f;",index,nbVariables,tailleDomaine,nbConstraints,nbTuples,durete,
+                    String.join(";",res)),"\n");
         });
     }
-    public static void traiterDonnees(Function<Model[],String[]> measure){
-        int nbRes=3000;
+    public static void main(String[] args){
+        traiterDonnees((tabModels,nbTuples,index) -> Stream.of(tabModels).map(
+                model -> {
+                    Solver s = model.getSolver();
+                    s.limitTime(30000);
+                    TimeInfo timeInfo = temps(() -> ! s.solve(), 30000000,5);
+                    return String.join (";",timeInfo.toStrings()) + "\n";
+                }
+        ));
+    }
+    public static void traiterDonnees(TriFunction<Model[],Integer,Integer,Stream<String>> toPrint){
+
         int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
         ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
         for (int i :
@@ -65,32 +77,19 @@ public class Expe {
             filesName.add(s);
         }
 
-        System.out.println("indice;nbVariables;nbConstraints;nbTuples;nbRes;durete;%ayantaumoins1sol");
+        System.out.println("indice;nbVariables;nbConstraints;nbTuples;NBRESEAU;durete;%ayantaumoins1sol");
         int i = 0;
         for (String unNomDeFichier :
                 filesName) {
-            Model[] tabModel = readModels(unNomDeFichier, nbRes);
+            Model[] tabModel = readModels(unNomDeFichier, NBRESEAU);
 
-            String s = ligneCsv(i,tabModel,tabNbTuples[i],measure);
-            System.out.println(s);
+            toPrint.apply(tabModel,tabNbTuples[i],i).forEach(System.out::print);
             i++;
         }
 
     }
 
-    public static String ligneCsv (int index, Model[] tabModel, int nbTuples,Function<Model[],String[]> measure){
-        int nbVariables = tabModel[0].getVars().length;
-        int tailleDomaine = tabModel[0].getVars()[0].asIntVar().getDomainSize(); // toutes les variables ont un domaine de même taille
-        int nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
-        double durete = (tailleDomaine*tailleDomaine - nbTuples)/tailleDomaine*tailleDomaine;
 
-        String[] res = measure.apply(tabModel);
-
-
-        return String.format(Locale.US,"%d;%d;%d;%d;%d;%f;",index,nbVariables,tailleDomaine,nbConstraints,nbTuples,durete,
-                String.join(";",res));
-
-    }
 
     public static Model[] readModels(String fileName, int n) {
         String ficName = fileName;
