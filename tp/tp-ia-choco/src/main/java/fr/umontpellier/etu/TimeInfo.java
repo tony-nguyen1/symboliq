@@ -7,11 +7,14 @@ public class TimeInfo {
 
     private double sysTime;
 
+    private boolean timedOut;
 
-    public TimeInfo(double userTime,double cpuTime,double realTime){
+
+    public TimeInfo(double userTime, double cpuTime, double realTime, boolean timedOut){
         this.userTime = userTime;
         this.cpuTime = cpuTime;
         this.realTime = realTime;
+        this.timedOut = timedOut;
         sysTime = cpuTime - userTime;
     }
     public double getUserTime() {
@@ -28,5 +31,13 @@ public class TimeInfo {
     public double getSysTime(){
         return sysTime;
     }
+
+    public boolean isTimedOut() {
+        return timedOut;
+    }
+    /*@Override
+    public String toString(){
+        return
+    }*/
 }
 

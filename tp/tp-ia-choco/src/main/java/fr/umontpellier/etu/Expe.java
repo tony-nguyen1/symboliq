@@ -6,14 +6,14 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.variables.IntVar;
-
-import static java.lang.Math.pow;
 
 public class Expe {
 
@@ -56,20 +56,28 @@ public class Expe {
                 filesName) {
             Model[] tabModel = readModels(unNomDeFichier, nbRes);
 
-            int nbVariables, tailleDomaine, nbConstraints;
-            nbVariables = tabModel[0].getVars().length;
-            tailleDomaine = tabModel[0].getVars()[0].asIntVar().getDomainSize(); // toutes les variables ont un domaine de même taille
-            nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
-
-
-            double durete = (tailleDomaine*tailleDomaine - tabNbTuples[i])/tailleDomaine*tailleDomaine;
-            double res = calcPourcentageBench(tabModel, "30s");
-
-
-            String s = String.format(Locale.US,"%d;%d;%d;%d;%d;%f;%.4f",i,nbVariables,tailleDomaine,nbConstraints,tabNbTuples[i],durete,res);
+            String s = ligneCsv(i,tabModel,tabNbTuples[i],
+                    models -> Stream.of(calcEffectifsBench(models,"30s"))
+                            .map(String::valueOf).toArray(String[]::new));/*on converti le tableau de int
+                           renvoyé par calcEffectifsBench en tableau de String */
             System.out.println(s);
             i++;
         }
+    }
+
+
+    public static String ligneCsv (int index, Model[] tabModel, int nbTuples,Function<Model[],String[]> measure){
+        int nbVariables = tabModel[0].getVars().length;
+        int tailleDomaine = tabModel[0].getVars()[0].asIntVar().getDomainSize(); // toutes les variables ont un domaine de même taille
+        int nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
+        double durete = (tailleDomaine*tailleDomaine - nbTuples)/tailleDomaine*tailleDomaine;
+
+        String[] res = measure.apply(tabModel);
+
+
+        return String.format(Locale.US,"%d;%d;%d;%d;%d;%f;",index,nbVariables,tailleDomaine,nbConstraints,nbTuples,durete,
+                String.join(";",res));
+
     }
 
     public static Model[] readModels(String fileName, int n) {
@@ -102,31 +110,50 @@ public class Expe {
     }
 
     //au moins 1 solution
-    public static boolean modelHasASolution(Model unModel){
-        boolean foundASolution = false;
+    //au moins 1 solution
+    public static int modelHasASolution(Model unModel){
+//        boolean foundASolution = false;
+        int code = -1;
         Solver solver = unModel.getSolver();
 
         if(solver.solve()){ // true if at least one solution has been found
-            foundASolution = true;
+//            foundASolution = true;
+            code = 0;
         } else if (solver.isStopCriterionMet()) {
 //            System.out.println("The solver could not find a solution nor prove that none exists in the given limits");
+            code = 1;
         } else {
 //            System.out.println("The solver has proved the problem has no solution");
+            code = 2;
         }
 
-        return foundASolution;
+        return code;
     }
 
-    public static double calcPourcentageBench(Model[] models, String duration){
-        double nbReseauTotal = models.length;
-        double nbReseauQuiPossedeAuMoinsUneSolution = 0;
+    public static int[] calcEffectifsBench(Model[] models, String duration){
+        int nbReseauTotal = models.length;
+        int nbReseauQuiPossedeAuMoinsUneSolution = 0;
+        int[] result = {0,0,0,models.length}; //nbReussite, nbTimeOut, nbEchec, total
 
         for (Model m :
                 models) {
             m.getSolver().limitTime(duration);
-            if (modelHasASolution(m)) {
-                nbReseauQuiPossedeAuMoinsUneSolution++;
+            int code = modelHasASolution(m);
+            switch (code) {
+                case 0:
+                    result[0]++;
+                    break;
+                case 1:
+                    result[1]++;
+                    break;
+                case 2:
+                    result[2]++;
+                    break;
+
             }
+//            if (modelHasASolution(m)) {
+//                nbReseauQuiPossedeAuMoinsUneSolution++;
+//            }
         }
 
 //        System.out.println(nbReseauQuiPossedeAuMoinsUneSolution +"/"+nbReseauTotal);
@@ -141,20 +168,21 @@ public class Expe {
 //        d = nbReseauTotal;
 //        System.out.println(c/d);
 
-        return nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
+        return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
     }
-    public static TimeInfo temps(Supplier<Boolean> success, String limit){
+
+    public static TimeInfo temps(Supplier<Boolean> isTimedOut, String limit){
         ThreadMXBean thread = ManagementFactory.getThreadMXBean();
-// ...
         long startTime = System.nanoTime();
         long startCpuTime = thread.getCurrentThreadCpuTime();
         long startUserTime = thread.getCurrentThreadUserTime();
-        if (! success.get()) return null;
+        boolean timedOut = isTimedOut.get();
         long userTime = thread.getCurrentThreadUserTime() - startUserTime;
         long cpuTime = thread.getCurrentThreadCpuTime() - startCpuTime;
         long realTime = System.nanoTime() - startTime;
-        return new TimeInfo(userTime,cpuTime,realTime);
+        return new TimeInfo(userTime,cpuTime,realTime, timedOut);
 
     }
+
 
 }
