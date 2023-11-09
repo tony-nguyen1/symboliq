@@ -149,22 +149,7 @@ public class Expe {
                     break;
 
             }
-//            if (modelHasASolution(m)) {
-//                nbReseauQuiPossedeAuMoinsUneSolution++;
-//            }
         }
-
-//        System.out.println(nbReseauQuiPossedeAuMoinsUneSolution +"/"+nbReseauTotal);
-//
-//        double a = nbReseauQuiPossedeAuMoinsUneSolution;
-//        double b = nbReseauTotal;
-//
-//        System.out.println(a/b);
-//
-//        double c, d;
-//        c = nbReseauQuiPossedeAuMoinsUneSolution;
-//        d = nbReseauTotal;
-//        System.out.println(c/d);
 
         return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
     }
