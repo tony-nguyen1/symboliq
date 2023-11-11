@@ -97,7 +97,50 @@ public class Expe {
         }
 
     }
+  
+    public static void mainBis(String[] args){
+        int nbRes=30;
+        int finInterval = 204;
+        int debutInterval = 202;
+        int pas = 2;
+        int tailleTabNbTuples = ((finInterval-debutInterval)/2)+1;
+        int[] tabNbTuples = new int[tailleTabNbTuples];
+          int j=0;
+          for (int i=finInterval; i>=debutInterval;i=i-pas) {
+              tabNbTuples[j]=i;
+              j++;
+          }
+          ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
+          for (int i :
+                  tabNbTuples) {
+            
+              String s = String.format("benchmark/set35_17_249_i_30/csp%d.txt",i);
+              filesName.add(s);
+          }
 
+          System.out.println("indice;nbVariables;tailleDom;nbConstraints;nbTuples;durete;nbReussite;nbTO;nbEchec;total");
+          int i = 0;
+          for (String unNomDeFichier :
+                  filesName) {
+              Model[] tabModel = readModels(unNomDeFichier, nbRes);
+
+              int nbVariables, tailleDomaine, nbConstraints;
+              nbVariables = tabModel[0].getVars().length;
+              tailleDomaine = tabModel[0].getVars()[0].asIntVar().getDomainSize(); // toutes les variables ont un domaine de même taille
+              nbConstraints = tabModel[0].getNbCstrs(); // toutes les contraintes ont les mêmes cardinaux
+
+
+              double tailleDomaineCarre = tailleDomaine * tailleDomaine;
+              double durete = (tailleDomaineCarre - tabNbTuples[i])/tailleDomaineCarre;
+              int[] res = calcPourcentageBench(tabModel, "30s");
+
+
+              String s = String.format(Locale.US,"%d;%d;%d;%d;%d;%f;%d;%d;%d;%d",i,nbVariables,tailleDomaine,nbConstraints,tabNbTuples[i],durete,res[0],res[1],res[2],res[3]);
+              System.out.println(s);
+              i++;
+          }
+    }
+  
 
 
     public static Model[] readModels(String fileName, int n) {
@@ -131,7 +174,6 @@ public class Expe {
     }
 
     //au moins 1 solution
-    //au moins 1 solution
     public static int modelHasASolution(Model unModel){
 //        boolean foundASolution = false;
         int code = -1;
@@ -151,7 +193,6 @@ public class Expe {
         return code;
     }
 
-    public static int[] calcEffectifsBench(Model[] models, String duration){
         int nbReseauTotal = models.length;
         int nbReseauQuiPossedeAuMoinsUneSolution = 0;
         int[] result = {0,0,0,models.length}; //nbReussite, nbTimeOut, nbEchec, total
@@ -176,18 +217,6 @@ public class Expe {
 //                nbReseauQuiPossedeAuMoinsUneSolution++;
 //            }
         }
-
-//        System.out.println(nbReseauQuiPossedeAuMoinsUneSolution +"/"+nbReseauTotal);
-//
-//        double a = nbReseauQuiPossedeAuMoinsUneSolution;
-//        double b = nbReseauTotal;
-//
-//        System.out.println(a/b);
-//
-//        double c, d;
-//        c = nbReseauQuiPossedeAuMoinsUneSolution;
-//        d = nbReseauTotal;
-//        System.out.println(c/d);
 
         return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
     }
