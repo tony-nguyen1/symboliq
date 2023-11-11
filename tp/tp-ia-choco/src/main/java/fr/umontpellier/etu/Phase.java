@@ -10,9 +10,7 @@ import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.variables.IntVar;
 
-import static java.lang.Math.pow;
-
-public class Expe {
+public class Phase {
 
     private static Model lireReseau(BufferedReader in) throws Exception{
         Model model = new Model("Expe");
@@ -79,6 +77,13 @@ public class Expe {
         }
     }
 
+    /**
+     * Lis un fichier et nous retourne les CSP contenus à l'intérieur de ce fichier
+     *
+     * @param fileName
+     * @param n nombre de réseau CSP présent dans le fichier
+     * @return
+     */
     public static Model[] readModels(String fileName, int n) {
         String ficName = fileName;
         int nbRes=n;
@@ -109,6 +114,12 @@ public class Expe {
     }
 
     //au moins 1 solution
+
+    /**
+     * Calcul pour trouver une solution à un model
+     * @param unModel
+     * @return 0 si une solution a été trouvé, 2 si il n'y pas de solution, 1 si il n'a pas trouvé de solutio avant le temps limite
+     */
     public static int modelHasASolution(Model unModel){
 //        boolean foundASolution = false;
         int code = -1;
@@ -128,9 +139,12 @@ public class Expe {
         return code;
     }
 
+    /**
+     * @param models tableau de modèle CSP avec les MÊMES PARAMÈTRES
+     * @param duration le temps limit avant timeout
+     * @return un tableau contenant le nombre de CSP résolut, le nombre de TO, le nombre de CSP insatisfiable et le nombre de CSP en tout
+     */
     public static int[] calcPourcentageBench(Model[] models, String duration){
-        int nbReseauTotal = models.length;
-        int nbReseauQuiPossedeAuMoinsUneSolution = 0;
         int[] result = {0,0,0,models.length}; //nbReussite, nbTimeOut, nbEchec, total
 
         for (Model m :
@@ -147,26 +161,10 @@ public class Expe {
                 case 2:
                     result[2]++;
                     break;
-
             }
-//            if (modelHasASolution(m)) {
-//                nbReseauQuiPossedeAuMoinsUneSolution++;
-//            }
         }
 
-//        System.out.println(nbReseauQuiPossedeAuMoinsUneSolution +"/"+nbReseauTotal);
-//
-//        double a = nbReseauQuiPossedeAuMoinsUneSolution;
-//        double b = nbReseauTotal;
-//
-//        System.out.println(a/b);
-//
-//        double c, d;
-//        c = nbReseauQuiPossedeAuMoinsUneSolution;
-//        d = nbReseauTotal;
-//        System.out.println(c/d);
-
-        return result;//nbReseauQuiPossedeAuMoinsUneSolution/nbReseauTotal;
+        return result;
     }
 
 }
