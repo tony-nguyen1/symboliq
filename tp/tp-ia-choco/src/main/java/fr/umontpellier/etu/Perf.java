@@ -40,7 +40,7 @@ public class Perf {
     }
 
 
-    public static final int NBRESEAU =2;
+    public static final int NBRESEAU =30;
     public static void mainTony(String[] args){
         traiterDonnees((tabModel,nbTuples,index) -> {
             int nbVariables = tabModel[0].getVars().length;
@@ -61,15 +61,15 @@ public class Perf {
                 model -> {
                     Solver s = model.getSolver();
                     s.limitTime(30000);
-                    TimeInfo timeInfo = temps(() -> (! s.solve()) && s.hasReachedLimit(), 30000000,5);
+                    TimeInfo timeInfo = temps(() -> (! s.solve()) && s.isStopCriterionMet(), 30000000,5);
                     return String.valueOf(index) + ";" + nbTuples + ";" + String.join (";",timeInfo.toStrings()) + "\n";
                 }
         ),"indice;nbTuples;tempsReel;tempsCPU;tempsUser;tempsSys;nbTimeOut");
     }
     public static void traiterDonnees(TriFunction<Model[],Integer,Integer,Stream<String>> toPrint,String index){
-        int finInterval = 211;
-        int debutInterval = 178;
-        int pas = 3;
+        int finInterval = 204;
+        int debutInterval = 186;
+        int pas = 2;
         int tailleTabNbTuples = ((finInterval-debutInterval)/pas)+1;
         int[] tabNbTuples = new int[tailleTabNbTuples];
         int j=0;
@@ -80,7 +80,7 @@ public class Perf {
         ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
         for (int i :
                 tabNbTuples) {
-            String s = String.format("set35_17_249_i_30/csp%d.txt",i);
+            String s = String.format("benchmark/set35_17_249_i_30bis/csp%d.txt",i);
             filesName.add(s);
         }
 
