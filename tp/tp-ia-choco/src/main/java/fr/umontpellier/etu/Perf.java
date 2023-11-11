@@ -6,7 +6,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -16,7 +15,7 @@ import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.variables.IntVar;
 
-public class Expe {
+public class Perf {
 
     private static Model lireReseau(BufferedReader in) throws Exception{
         Model model = new Model("Expe");
