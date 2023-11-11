@@ -55,7 +55,7 @@ public class Expe {
 
             return Stream.of(String.format(Locale.US,"%d;%d;%d;%d;%d;%f;",index,nbVariables,tailleDomaine,nbConstraints,nbTuples,durete,
                     String.join(";",res)),"\n");
-        });
+        },"indice;nbVariables;nbConstraints;nbTuples;NBRESEAU;durete;%ayantaumoins1sol");
     }
     public static void main(String[] args){
         traiterDonnees((tabModels,nbTuples,index) -> Stream.of(tabModels).map(
@@ -63,16 +63,19 @@ public class Expe {
                     Solver s = model.getSolver();
                     s.limitTime(30000);
                     TimeInfo timeInfo = temps(() -> ! s.solve(), 30000000,5);
-                    return String.join (";",timeInfo.toStrings()) + "\n";
+                    return String.valueOf(index) + ";" + nbTuples + ";" + String.join (";",timeInfo.toStrings()) + "\n";
                 }
-        ));
+        ),"indice;nbTuples;tempsReel;tempsCPU;tempsUser;tempsSys;nbTimeOut");
     }
-    public static void traiterDonnees(TriFunction<Model[],Integer,Integer,Stream<String>> toPrint){
 
-//        int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
-        int [] tabNbTuples = new int[((204-186)/2)+1];
-        int j = 0;
-        for (int i=204;i>=186;i=i-2) {
+    public static void traiterDonnees(TriFunction<Model[],Integer,Integer,Stream<String>> toPrint,String index){
+        int finInterval = 204;
+        int debutInterval = 186;
+        int pas = 2;
+        int tailleTabNbTuples = ((finInterval-debutInterval)/pas)+1;
+        int[] tabNbTuples = new int[tailleTabNbTuples];
+        int j=0;
+        for (int i=finInterval; i>=debutInterval;i=i-pas) {
             tabNbTuples[j]=i;
             j++;
         }
@@ -83,7 +86,7 @@ public class Expe {
             filesName.add(s);
         }
 
-        System.out.println("indice;nbVariables;nbConstraints;nbTuples;NBRESEAU;durete;%ayantaumoins1sol");
+        System.out.println(index);
         int i = 0;
         for (String unNomDeFichier :
                 filesName) {
