@@ -61,7 +61,7 @@ public class Perf {
                 model -> {
                     Solver s = model.getSolver();
                     s.limitTime(30000);
-                    TimeInfo timeInfo = temps(() -> ! s.solve(), 30000000,5);
+                    TimeInfo timeInfo = temps(() -> (! s.solve()) && s.hasReachedLimit(), 30000000,5);
                     return String.valueOf(index) + ";" + nbTuples + ";" + String.join (";",timeInfo.toStrings()) + "\n";
                 }
         ),"indice;nbTuples;tempsReel;tempsCPU;tempsUser;tempsSys;nbTimeOut");
