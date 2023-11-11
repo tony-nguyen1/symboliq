@@ -41,7 +41,7 @@ public class Expe {
     }
 
 
-    public static final int NBRESEAU =3000;
+    public static final int NBRESEAU =30;
     public static void mainTony(String[] args){
         traiterDonnees((tabModel,nbTuples,index) -> {
             int nbVariables = tabModel[0].getVars().length;
@@ -69,11 +69,17 @@ public class Expe {
     }
     public static void traiterDonnees(TriFunction<Model[],Integer,Integer,Stream<String>> toPrint){
 
-        int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
+//        int[] tabNbTuples = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30, 32, 34, 36, 38, 40, 45, 50, 60, 70, 80};
+        int [] tabNbTuples = new int[((204-186)/2)+1];
+        int j = 0;
+        for (int i=204;i>=186;i=i-2) {
+            tabNbTuples[j]=i;
+            j++;
+        }
         ArrayList<String> filesName = new ArrayList<>(tabNbTuples.length);
         for (int i :
                 tabNbTuples) {
-            String s = String.format("csp%d.txt",i);
+            String s = String.format("./benchmark/set35_17_249_i_30bis/csp%d.txt",i);
             filesName.add(s);
         }
 
@@ -112,6 +118,7 @@ public class Expe {
         } catch (Exception e) {
             System.err.println("Problème dans readModeles");
             System.err.println(e.getMessage());
+            System.err.println(fileName);
             e.printStackTrace();
         }
 
