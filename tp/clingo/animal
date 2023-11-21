@@ -1,0 +1,20 @@
+% instance
+herbivore(chevre).
+carnivore(loup).
+humain(petitChaperonRouge).
+
+% encoding
+animal(X) :- herbivore(X).
+animal(X) :- carnivore(X).
+animal(X) :- omnivore(X).
+% carnivore(X) :- omnivore(X).
+% herbivore(X) :- omnivore(X).
+omnivore(X) :- humain(X).
+% 7.
+animal(Y) :- carnivore(X), mange(X,Y).
+% 8.
+plante(Y) :- herbivore(X), mange(X,Y).
+% 9.
+mange(X,Y) :- carnivore(X), herbivore(Y), X!=Y.
+
+:- animal(X), plante(X). % contrainte negative
