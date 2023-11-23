@@ -1,0 +1,80 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Présentation du Sujet }{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}La problématique}{4}{subsection.1.1}%
+\contentsline {paragraph}{}{4}{section*.4}%
+\contentsline {paragraph}{}{4}{section*.5}%
+\contentsline {subsection}{\numberline {1.2}Quelques approches de reconnaissance de formes}{4}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}k-Nearest Neighbor}{4}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Template matching}{4}{subsubsection.1.2.2}%
+\contentsline {paragraph}{}{4}{section*.6}%
+\contentsline {paragraph}{}{4}{section*.7}%
+\contentsline {subsubsection}{\numberline {1.2.3}Les réseaux de neuronnes}{4}{subsubsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.3}Cahier des charges}{4}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Objectifs}{4}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}Besoins et contraintes}{4}{subsubsection.1.3.2}%
+\contentsline {paragraph}{Les besoins}{4}{section*.8}%
+\contentsline {subparagraph}{Capturer une image}{5}{section*.9}%
+\contentsline {subparagraph}{Pré-traitement}{5}{section*.10}%
+\contentsline {subparagraph}{Segmentation de l'image}{5}{section*.11}%
+\contentsline {subparagraph}{Extraction des caractères}{5}{section*.12}%
+\contentsline {subparagraph}{Reconnaissance}{5}{section*.13}%
+\contentsline {subparagraph}{Présenter}{5}{section*.14}%
+\contentsline {paragraph}{Les contraintes}{5}{section*.15}%
+\contentsline {subsubsection}{\numberline {1.3.3}Résulats attendus}{5}{subsubsection.1.3.3}%
+\contentsline {paragraph}{}{5}{section*.16}%
+\contentsline {section}{\numberline {2}Technologies utilisées}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Langages et outils}{5}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Python3}{5}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}OpenCV}{5}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}You Only Look Once}{5}{subsubsection.2.1.3}%
+\contentsline {paragraph}{}{5}{section*.17}%
+\contentsline {paragraph}{Les réseaux de neurones}{6}{section*.18}%
+\contentsline {subparagraph}{}{6}{section*.19}%
+\contentsline {subparagraph}{}{6}{section*.20}%
+\contentsline {subparagraph}{Les Réseaux de Neurones Convolutifs (CNN)}{6}{section*.21}%
+\contentsline {subparagraph}{}{6}{section*.22}%
+\contentsline {subparagraph}{}{6}{section*.23}%
+\contentsline {paragraph}{}{6}{section*.26}%
+\contentsline {paragraph}{}{6}{section*.28}%
+\contentsline {paragraph}{}{6}{section*.30}%
+\contentsline {section}{\numberline {3}Développements Logiciel : Conception, Modélisation, Implémentation}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Interface Homme-Machine}{7}{subsection.3.1}%
+\contentsline {paragraph}{}{8}{section*.31}%
+\contentsline {paragraph}{}{9}{section*.32}%
+\contentsline {subsection}{\numberline {3.2}Filtres et seuillage}{9}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Seuillage global}{9}{subsubsection.3.2.1}%
+\contentsline {paragraph}{}{9}{section*.33}%
+\contentsline {paragraph}{}{10}{section*.34}%
+\contentsline {subsubsection}{\numberline {3.2.2}Seuillage adaptatif}{10}{subsubsection.3.2.2}%
+\contentsline {paragraph}{}{10}{section*.35}%
+\contentsline {subsubsection}{\numberline {3.2.3}Seuillage de Sauvola}{11}{subsubsection.3.2.3}%
+\contentsline {paragraph}{}{11}{section*.36}%
+\contentsline {paragraph}{}{11}{section*.37}%
+\contentsline {paragraph}{}{11}{section*.38}%
+\contentsline {subsubsection}{\numberline {3.2.4}Seuillage Otsu}{12}{subsubsection.3.2.4}%
+\contentsline {paragraph}{}{12}{section*.39}%
+\contentsline {paragraph}{}{12}{section*.40}%
+\contentsline {subsection}{\numberline {3.3}Segmentation}{12}{subsection.3.3}%
+\contentsline {paragraph}{}{12}{section*.41}%
+\contentsline {paragraph}{}{13}{section*.42}%
+\contentsline {subsection}{\numberline {3.4}Entrainement de YOLO}{13}{subsection.3.4}%
+\contentsline {paragraph}{}{13}{section*.43}%
+\contentsline {paragraph}{}{13}{section*.44}%
+\contentsline {paragraph}{}{13}{section*.45}%
+\contentsline {section}{\numberline {4}Algorithmes et Analyse}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Segmentation par histogramme de projection}{14}{subsection.4.1}%
+\contentsline {paragraph}{}{16}{section*.46}%
+\contentsline {paragraph}{}{16}{section*.47}%
+\contentsline {paragraph}{}{16}{section*.48}%
+\contentsline {paragraph}{}{16}{section*.49}%
+\contentsline {section}{\numberline {5}Analyse des Résulats}{19}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Mesure expérimental de YOLO}{19}{subsection.5.1}%
+\contentsline {paragraph}{}{19}{section*.50}%
+\contentsline {paragraph}{}{20}{section*.51}%
+\contentsline {paragraph}{}{20}{section*.52}%
+\contentsline {paragraph}{}{21}{section*.53}%
+\contentsline {paragraph}{}{22}{section*.54}%
+\contentsline {section}{Bilan et Conclusions}{23}{figure.23}%
+\contentsline {paragraph}{}{23}{section*.56}%
+\contentsline {paragraph}{}{23}{section*.57}%
+\contentsline {paragraph}{}{23}{section*.58}%
