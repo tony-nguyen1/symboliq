@@ -1,0 +1,17 @@
+% BF
+m(1;2;3;4;5).
+voisin(1,2).voisin(2,3).voisin(3,4).voisin(4,5).
+
+coul(blu;gre;ivo;red;yel).
+nat(eng;spa;ukr;jap;nor).
+drink(coffee;milk;orange;tea;water).
+animal(dog;fox;horse;snail;zebre).
+cig(oldGold;kools;chesterfields;luckyStrike;parliaments).
+
+% BR
+% 2.
+lives(N,C):-nat(eng),coul(red).
+
+
+% x5
+color(X,red):-m(X),not color(X,yellow),not color(X,ivory), not color(green), not color(blue).
