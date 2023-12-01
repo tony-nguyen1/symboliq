@@ -1,0 +1,10 @@
+% BF
+m(1;2).
+coul(blue;red).
+
+% BR
+color(X,red):-m(X), not color(X,blue).
+color(X,blue):-m(X), not color(X,red).
+:- color(X,C), color(Y,C), X!=Y.
+
+#show color/2.

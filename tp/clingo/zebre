@@ -2,16 +2,94 @@
 m(1;2;3;4;5).
 voisin(1,2).voisin(2,3).voisin(3,4).voisin(4,5).
 
-coul(blu;gre;ivo;red;yel).
+coul(blue;green;ivory;red;yellow).
 nat(eng;spa;ukr;jap;nor).
 drink(coffee;milk;orange;tea;water).
 animal(dog;fox;horse;snail;zebre).
-cig(oldGold;kools;chesterfields;luckyStrike;parliaments).
+cig(chesterfields;kools;luckyStrike;oldGold;parliaments).
 
 % BR
-% 2.
-lives(N,C):-nat(eng),coul(red).
+% la couleur de la maison X
+color(X,red):-m(X),not color(X,yellow),not color(X,ivory), not color(X,green), not color(X,blue).
+color(X,green):-m(X),not color(X,yellow),not color(X,ivory), not color(X,red), not color(X,blue).
+color(X,blue):-m(X),not color(X,yellow),not color(X,ivory), not color(X,green), not color(X,red).
+color(X,yellow):-m(X),not color(X,red),not color(X,ivory), not color(X,green), not color(X,blue).
+color(X,ivory):-m(X),not color(X,yellow),not color(X,red), not color(X,green), not color(X,blue).
+:- color(A,C), color(B,C), A!=B.
+
+% X habite la maison N
+livesIn(X,1):-nat(X), not livesIn(X,2), not livesIn(X,3), not livesIn(X,4), not livesIn(X,5).
+livesIn(X,2):-nat(X), not livesIn(X,1), not livesIn(X,3), not livesIn(X,4), not livesIn(X,5).
+livesIn(X,3):-nat(X), not livesIn(X,1), not livesIn(X,2), not livesIn(X,4), not livesIn(X,5).
+livesIn(X,4):-nat(X), not livesIn(X,1), not livesIn(X,2), not livesIn(X,3), not livesIn(X,5).
+livesIn(X,5):-nat(X), not livesIn(X,1), not livesIn(X,2), not livesIn(X,3), not livesIn(X,4).
+:- livesIn(X, N), livesIn(Y,N), X!=Y.
+
+% X est propriétaire de l'animal Y
+owns(X,dog):-nat(X), not owns(X,fox), not owns(X,horse), not owns(X,snail), not owns(X,zebre).
+owns(X,fox):-nat(X), not owns(X,dog), not owns(X,horse), not owns(X,snail), not owns(X,zebre).
+owns(X,horse):-nat(X), not owns(X,dog), not owns(X,fox), not owns(X,snail), not owns(X,zebre).
+owns(X,snail):-nat(X), not owns(X,dog), not owns(X,fox), not owns(X,horse), not owns(X,zebre).
+owns(X,zebre):-nat(X), not owns(X,dog), not owns(X,fox), not owns(X,horse), not owns(X,snail).
+:-owns(X,A),owns(Y,A),X!=Y.
+
+% X boit la boisson ...
+drinks(X,coffee):-nat(X), not drinks(X,milk), not drinks(X,orange), not drinks(X,tea), not drinks(X,water).
+drinks(X,milk):-nat(X), not drinks(X,coffee), not drinks(X,orange), not drinks(X,tea), not drinks(X,water).
+drinks(X,orange):-nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,tea), not drinks(X,water).
+drinks(X,tea):-nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,orange), not drinks(X,water).
+drinks(X,water):-nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,orange), not drinks(X,tea).
+%:-drinks(X,D),drinks(Y,D),X!=Y.
+
+% X fume la marque de cigarettes ...
+smokes(X,chesterfields):-nat(X), not smokes(X,kools), not smokes(X,luckyStrike), not smokes(X,oldGold), not smokes(X,parliaments).
+smokes(X,kools):-nat(X), not smokes(X,chesterfields), not smokes(X,luckyStrike), not smokes(X,oldGold), not smokes(X,parliaments).
+smokes(X,luckyStrike):-nat(X), not smokes(X,chesterfields), not smokes(X,kools), not smokes(X,oldGold), not smokes(X,parliaments).
+smokes(X,oldGold):-nat(X), not smokes(X,chesterfields), not smokes(X,kools), not smokes(X,luckyStrike), not smokes(X,parliaments).
+smokes(X,parliaments):-nat(X), not smokes(X,chesterfields), not smokes(X,kools), not smokes(X,luckyStrike), not smokes(X,oldGold).
+:-smokes(X,C),smokes(Y,C),X!=Y.
+
+% 2. The Englishman lives in the red house.
+% -> Si la maison X est rouge, l'englais vis dans X.
+livesIn(eng,X):- color(X,red).
+
+% 3. The Spaniard owns the dog.
+% tête :- corps == corps -> tête
+% si corps vide alors tête obliger
+owns(spa,dog):-.
+
+% 4. Coffee is drunk in the green house.
+% -> Peut importe qui habite dans la maison verte, il boit du cafée.
+drinks(X,coffee):-color(M,green), livesIn(X,M).
+
+% 5. The Ukrainian drinks tea.
+drinks(ukr,tea):-.
+
+% 6. The green house is immediately to the right of the ivory house.
+color(M2,green):-color(M1,ivory),voisin(M1,M2).
+
+% 7. The Old Gold smoker owns snails.
+% -> X possède escargot si X fume des oldGold.
+owns(X,snail) :- smokes(X,oldGold).
+
+% 8. Kools are smoked in the yellow house.
+% -> X habite M si X fume des kools et habite la maison M de couleur yellow.
+livesIn(X,M) :- smokes(X,kools), color(M,yellow).
+
+% 9. Milk is drunk in the middle house.
+drinks(X,milk):- livesIn(X,3).
+
+% 10. The Norwegian lives in the first house.
+livesIn(nor,1):-.
+
+% 11. The man who smokes Chesterfields lives in the house next to the man with the fox.
+nextTo(B,C) :- voisin(B,C).
+nextTo(C,B) :- voisin(B,C).
+owns(Y,fox) :- smokes(X,chesterfields), livesIn(X,M1), nextTo(M1,M2), livesIn(Y,M2).
 
 
-% x5
-color(X,red):-m(X),not color(X,yellow),not color(X,ivory), not color(green), not color(blue).
+maison(Numero, Couleur, Nationalite,Boisson,Animal, Cigarette):-color(Numero, Couleur), livesIn(Nationalite, Numero), drinks(Nationalite,Boisson), owns(Nationalite,Animal), smokes(Nationalite,Cigarette).
+
+#show maison/6.
+
+
