@@ -40,7 +40,7 @@ drinks(X,milk) :- nat(X), not drinks(X,coffee), not drinks(X,orange), not drinks
 drinks(X,orange) :- nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,tea), not drinks(X,water).
 drinks(X,tea) :- nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,orange), not drinks(X,water).
 drinks(X,water) :- nat(X), not drinks(X,coffee), not drinks(X,milk), not drinks(X,orange), not drinks(X,tea).
-%:-drinks(X,D),drinks(Y,D),X!=Y.
+:-drinks(X,D),drinks(Y,D),X!=Y.
 
 % X fume la marque de cigarettes ...
 smokes(X,chesterfields) :- nat(X), not smokes(X,kools), not smokes(X,luckyStrike), not smokes(X,oldGold), not smokes(X,parliaments).
@@ -86,24 +86,27 @@ livesIn(nor,1) :-.
 nextTo(B,D) :- voisin(B,D).
 nextTo(D,B) :- voisin(B,D).
 % 11. The man who smokes Chesterfields lives in the house next to the man with the fox.
-owns(Y,fox) :- smokes(X,chesterfields), livesIn(X,M1), nextTo(M1,M2), livesIn(Y,M2).
+:- owns(Y,fox), livesIn(X,M1), not nextTo(M1,M2), livesIn(Y,M2), smokes(X,chesterfields).
+
 
 % 12. Kools are smoked in the house next to the house where the horse is kept.
-owns(Y,horse) :- smokes(X,kools), livesIn(X,M1), nextTo(M1,M2), livesIn(Y,M2).
+smokes(X,kools) :- owns(Y,horse), livesIn(X,M1), nextTo(M1,M2), livesIn(Y,M2).
 
 % 13. The Lucky Strike smoker drinks orange juice.
 %:-smokes(X,luckyStrike),drinks(Y,orange),X!=Y.
 %drinks(X,orange) :- smokes(X,luckyStrike).
+smokes(X,luckyStrike) :- drinks(X,orange).
 drinkedBySame(X):-smokes(X,luckyStrike),drinks(X,orange).
 
 % 14. The Japanese smokes Parliaments.
 smokes(jap,parliaments) :-.
 
 % 15. The Norwegian lives next to the blue house.
-color(M2,blue) :- livesIn(nor,M1), voisin(M1,M2).
+color(M2,blue) :- livesIn(nor,M1), nextTo(M1,M2).
 
 maison(Numero,Couleur,Nationalite,Boisson,Animal,Cigarette) :- color(Numero,Couleur), livesIn(Nationalite, Numero), drinks(Nationalite,Boisson), owns(Nationalite,Animal), smokes(Nationalite,Cigarette).
 
 #show maison/6.
+%#show drinkedBySame/1.
 
 

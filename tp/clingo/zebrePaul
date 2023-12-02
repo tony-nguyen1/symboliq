@@ -1,0 +1,68 @@
+n(1;2;3;4;5).
+aDroite(X,Y) :- n(X),n(Y),Y=X+1.
+
+p(M,A,V) :- n(M),n(A),n(V),n(V1),n(V2),n(V3),n(V4)
+  ,not p(M,A,V1),not p(M,A,V2),not p(M,A,V3),not p(M,A,V4)
+  ,V!=V1,V!=V2,V!=V3,V!=V4
+  ,V1!=V2,V1!=V3,V1!=V4
+  ,V2!=V3,V2!=V4
+  ,V3!=V4.
+:- p(M,A,V1),p(M,A,V2),V1!=V2.
+:- p(M1,A,V),p(M2,A,V),M1!=M2.
+
+
+
+
+% 1. There are five houses
+
+% 2.The Englishman lives in the red house.
+p(X,1,1) :- p(X,2,1).
+
+% 3.The Spaniard owns the dog.
+p(X,1,2):-p(X,3,1).
+
+%4.Coffee is drunk in the green house.
+p(X,4,1) :- p(X,2,2).
+
+%5.The Ukrainian drinks tea.
+p(X,1,3) :- p(X,4,2).
+
+%6.The green house is immediately to the right of the ivory house.
+p(X,2,2) :-p(X-1,2,3).
+
+%7.The Old Gold smoker owns snails.
+p(X,5,1) :- p(X,3,2).
+
+%8.Kools are smoked in the yellow house.
+p(X,5,2):-p(X,2,3).
+
+%9.Milk is drunk in the middle house.
+p(3,4,3).
+
+%10.The Norwegian lives in the first house.
+p(1,1,4).
+
+
+
+%11.The man who smokes Chesterfields lives in the house next to the man with the fox.
+:- p(X,5,3),p(Y,3,3),X!=Y+1,Y!=X+1.
+
+
+%12.Kools are smoked in the house next to the house where the horse is kept.
+:- p(X,5,2),p(Y,3,4),X!=Y+1,Y!=X+1.
+
+%13.The Lucky Strike smoker drinks orange juice.
+p(X,5,4):-p(X,4,4).
+
+%14.The Japanese smokes Parliaments.
+p(X,1,5):-p(X,5,5).
+
+%15.The Norwegian lives next to the blue house.
+:- p(X,1,4),p(Y,2,5),X!=Y+1,Y!=X+1.
+
+
+
+maison(X,Col,Nat,Pet,Dri,Cig) :- p(X,2,Col)
+  ,p(X,1,Nat),p(X,3,Pet),p(X,4,Dri),p(X,5,Cig).
+  
+#show maison/6.
