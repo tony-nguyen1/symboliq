@@ -1,0 +1,20 @@
+% Coloration de graphes
+
+% BF
+node(wa;nt;q;nsw;v;sa;t).
+edge(wa,nt).edge(nt,q).edge(q,nsw).edge(nsw,v).
+edge(wa,sa).edge(nt,sa).edge(q,sa).edge(nsw,sa).edge(v,sa).
+%node(1;2;3).
+%edge(1,2). edge(2,3).
+
+% BR
+% un sommet a l'une des 3 couleurs
+color(X,b) :- not color(X,r), not color(X,g), node(X).
+color(X,g) :- not color(X,r), not color(X,b), node(X).
+color(X,r) :- not color(X,g), not color(X,b), node(X).
+% les sommets reliés ont des couleurs différentes
+% contrainte négative, si 2 sommets sont reliés par une arête
+% et ils ont la même couleur C donne toujours faux.
+:-edge(X1,X2), color(X1,C), color(X2,C).
+
+#show color/2.

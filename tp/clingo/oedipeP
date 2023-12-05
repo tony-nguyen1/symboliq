@@ -79,66 +79,32 @@ roi(eteocle,thebes).
 roi(ladamos,thebes). 
 
 % BASE DE REGLES (A ECRIRE)
+pere(X,Y) :- aEnfant(X,Y),homme(X).
+mere(X,Y) :- aEnfant(X,Y),femme(X).
+parent(X,Y) :- pere(X,Y). 
+parent(X,Y) :- mere(X,Y). %en pratique, j'utiliserais plutôt aEnfant que parent si j'ai le droit
+roiPereRoi(X) :- roi(X,Z),pere(Y,X),roi(Y,T).
+roiPereRoiLieu(X) :- roi(X,Z),pere(Y,X),roi(Y,Z).
 
-%1
-pere(X,Y) :- homme(X), aEnfant(X,Y).
-mere(X,Y) :- femme(X), aEnfant(X,Y).
-parent(X,Y) :- pere(X,Y).
-parent(X,Y) :- mere(X,Y).
-
-%2
-answer2(X) :- roi(X,_), roi(Y,_), pere(Y,X).
-
-%3
-answer3(X) :- roi(X,Z), roi(Y,Z), pere(Y,X).
-%4
-grandParent(X,Y) :- parent(X,Z), parent(Z,Y).
-answer4(X) :- grandParent(X,oedipe).
-
-%5
-ancetre(X,Y) :- parent(X,Y).
-%ancetre(X,Y) :- grandParent(X,Y).
-ancetre(X,Y) :- ancetre(Z,Y),parent(X,Z).
-answer5(X) :- ancetre(X,oedipe).
-
-%6
-sexe_connu(X) :- femme(X).
-sexe_connu(X) :- homme(X).
-sexe_inconnu(X) :- personnage(X), not sexe_connu(X). % safe rule
-
-%7
-%pere_connu(X) :- pere(Y,X). %
-%pere_inconnu(X) :- personnage(X), not pere_connu(X).
-pere_inconnu(X) :- not pere(_,X), personnage(X).
-
-mere_inconnu(X) :- not mere(_,X), personnage(X).
-%8
-unParentInconnu(X) :- pere_inconnu(X), not mere_inconnu(X), personnage(X).
-unParentInconnu(X) :- not pere_inconnu(X), mere_inconnu(X), personnage(X).
-
-%9
-sibling(X,Y) :- pere(P,X), pere(P,Y), mere(M,X), mere(M,Y), X!=Y.
-halfSibling(X,Y) :- aEnfant(P,X), aEnfant(P,Y), not sibling(X,Y), X!=Y.
-
-%10
-inceste(X,Y) :- aEnfant(X,Y), aEnfant(X,Z), aEnfant(Y,Z).
-inceste(X,Y) :- inceste(Y,X).
-
-%11
 ancetreStrict(X,Y) :- aEnfant(X,Y).
 ancetreStrict(X,Y) :- aEnfant(Z,Y),ancetreStrict(X,Z).
 ancetreLarge(X,X) :-personnage(X).
 ancetreLarge(X,Y) :- ancetreStrict(X,Y).
 
-ancetreCommun(Z,X,Y) :- ancetreLarge(Z,X),ancetreLarge(Z,Y).
+sexeConnu(X) :- homme(X).
+sexeConnu(X):- femme(X).
+sexeInconnu(X) :- personnage(X),not sexeConnu(X).
+
+sibling(X,Y) :- pere(P,X),pere(P,Y),mere(M,X),mere(M,Y).
+halfSibling(X,Y) :- aEnfant(P,X),aEnfant(P,Y),not sibling(X,Y).
+inceste(X,Y) :- aEnfant(X,Y),aEnfant(X,Z),aEnfant(Y,Z).
+inceste(X,Y) :- inceste(Y,X).
+
+
+
+ancetreCommun(Z,X,Y) :- ancetreLarge(Z,X),ancetreLarge(Z,Y). %mais on peut ptet restreindre plus
 ancetreCommunEloigne(Z,X,Y) :- ancetreCommun(Z1,X,Y),ancetreStrict(Z,Z1).
 
 plusProcheAncetreCommun(Z,X,Y):-ancetreCommun(Z,X,Y),not ancetreCommunEloigne(Z,X,Y).
 
-%11A
-answer11A(Z) :- plusProcheAncetreCommun(Z,oclasos,laios).
-answer11B(Z) :- plusProcheAncetreCommun(Z,oclasos,oedipe).
-
-#show answer11A/1.
-
-
+#show plusProcheAncetreCommun/3.

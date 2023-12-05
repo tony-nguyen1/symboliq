@@ -65,4 +65,4 @@ p(X,1,5):-p(X,5,5).
 maison(X,Col,Nat,Pet,Dri,Cig) :- p(X,2,Col)
   ,p(X,1,Nat),p(X,3,Pet),p(X,4,Dri),p(X,5,Cig).
   
-#show maison/6.
+#show maison/6. 
